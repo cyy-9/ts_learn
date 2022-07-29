@@ -1,0 +1,269 @@
+强类型，弱类型：  (以类型安全角度分为)
+    强类型：语言层面限制函数的实参类型必须与形参类型相同
+    弱类型：语言层面不会限制实参的类型
+
+    强类型有更强的类型约束，弱类型几乎没有什么约束
+
+    强类型语言中不允许任意的隐式类型转换，弱类型语言则允许任意隐式数据类型转换
+
+静态类型，动态类型：  (以类型检查角度分为)
+    静态类型：一个变量声明时它的类型就是明确的，声明过后，它的类型不允许再修改
+    动态类型：在运行阶段才能够明确变量的类型，且变量类型可以随时改变
+
+javascrpt：弱类型且动态类型  没有编译环节
+
+强类型的优势：
+    错误更早暴露：在编码阶段就可以暴露出类型错误
+    代码更智能，编码更准确
+    方便代码重构
+    减少不必要的类型判断
+
+javascript静态类型检查器 Flow： 安装 npm install flow-bin
+    例：function sum(a: number, b: number) {
+            return a + b;
+        }
+    
+    在想要使用flow的文件第一行加上：// @flow，flow才会对此文件进行类型检查
+
+    由于flow的语法不符合js规范，所以不能使用node运行代码，所以需要在编译时，去掉类型注解
+        安装flow-remove-types工具，去掉类型注解：npm install flow-remove-types
+
+        安装babel去掉注解：npm install @babel/core @babel/cli @babel/preset-flow
+
+    安装flow vscode插件：flow language support 便于开发，类型错误问题直接显示
+
+    flow还可以根据代码推断出变量类型--类型推断
+
+    类型注解：
+        function sum(a: number, b:number): number { // 函数sum的返回值，参数a，b都是number类型
+            return a + b;
+        }
+
+    原始类型：
+        const a: number = NaN;  // 100 Infinity
+        const b: string = 'hello';
+        const c: boolean = true;
+        const d: null = null;
+        const e: void = undefined;
+        const f: symbol = Symbol();
+
+    数组类型：
+        const arr1: Array<number> = [1, 3, 4];  // arr1是全由数字组成的数组
+        const arr2: number[] = [1, 2, 3];   // arr2是全由数字组成的数组
+
+    对象类型：
+        const obj1: {foo: string, bar: number} = {foo: 'string', bar: 100};
+        const obj1: {foo?: string, bar: number} = {foo: 'string', bar: 100};    // 代表foo属性可有可无
+
+    函数类型：
+        一般是对函数参数和返回值类型的限制
+
+    特殊类型：
+        字面量类型：
+            const a: 'foo' = 'foo';     // 限制a的值为一个固定值'foo'
+
+        可以用type关键字，为类型定义别名：
+            type hahaha = string | number;  // hahaha类型为字符串或数字类型
+            const a: hahaha = 100;  // a的类型为字符串或数字类型
+    
+    mixed和any类型：
+        mixed类型：任意其它类型，是强类型，一个变量为mixed类型，不允许再改变类型
+        any类型：任意其它类型，但是是弱类型，可以再改变类型
+
+typescript：
+    javascript的超集，编译时会被编译为javascript
+
+    任何javascript运行环境都支持
+
+    相比于flow，功能更为强大，生态也更健全，更完善，属于渐进式
+
+    缺点：
+        多了很多概念
+        项目初期，使用typescript会增加很多成本
+
+    安装typescript：npm install -g typescript
+
+    typescript的配置文件：
+        初始化：tsc --init      会生成一个tsconfig.json文件
+        target属性：指定编译后生成的js的版本
+        module属性：指定采用什么方法进行模块化
+        outDir：指定编译后输出的文件夹
+        rootDir：设置源代码的文件夹
+        strict：指定严格模式
+    
+    运行ts文件：
+        配置文件tsconfig.json不生效：tsc xxx.ts
+        生效：在src下运行tsc
+
+    原始数据类型：
+        const a: string = 'hello world';
+        const b: number = 123; // 包括NaN Infinity
+        const c: boolean = true;     
+        // 在非严格模式下，string,number,boolean类型的变量可以设置为null / undefined，但严格模式下不可以
+
+        const d: void =  undefined;
+        // 非严格模式下，void类型的变量可以是null / undefined，严格模式下只能是undefined
+
+        const e: undefined = undefined;
+        const f: null = null;
+
+        const g: symbol = Symbol();
+        // 如果想在ts中使用symbol或者新语法，需要将配置文件的target属性设置为相应版本，否则编译会报错
+        // 例如target属性的值是es5，那么编译时只会引用es5的标准库，如果使用高版本的语法就会报错
+
+        标准库就是内置对象所对应的声明文件，如果想使用某些对象，就必须引用其所在标准库
+
+    可以设置typesript错误提示为中文：
+        终端运行 tsc --locale zh-CN
+    
+    作用域问题：
+        多个文件声明重名变量会报错，原因属于相同作用域--全局作用域下
+
+        解决：
+            1.立即执行函数
+            2.使用export导出，是文件变成一个模块
+    
+    object类型：
+        ts中的object类型泛指所有非原始类型
+
+        const a: object = {};   // a可以是任何非原始数据类型
+        const b: {} =  {};      // b只能是对象类型
+        
+        // 可以通过指定属性的方式，为对象属性声明类型，要求属性名必须相对应，不能多不能少；但通常使用接口
+        const a: {foo: number, boo: string} = {foo: 123, boo: '123'};
+
+    数组类型：
+        通常两种方式声明数组：
+            const arr1: Array<number> = [1, 2, 3];
+            const arr2: numnber[] = [1, 2, 3, 4];
+
+    元组类型：就是明确元素数量，以及每个元素类型的数组
+        const tuple: [number, string] = [123, 'hello'];
+
+    枚举类型：
+        enum obj {      // 声明一个枚举对象
+            a = 1,
+            b = 2,
+            c = 3,
+        }
+        使用时和对象一样，如果xxx的值为1：xxx: obj.a;
+        声明枚举对象时，可以不用复制，会从第一个属性从0开始累加，如果只指定第一个值，会从此值开始累加
+        枚举对象属性的值还可以是字符串，但字符串必须要设置初值，不能累加 (不常见)
+
+        枚举类型在编译时会编译为双向键值对对象，可以使用常量枚举类型--在enum前加const，这样编译时会直接将枚举类型的值替换为属性的值，不会编译枚举对象
+
+    函数类型：对参数和返回值进行类型限制
+        函数声明：
+            function sum(a: number, b: number): number {    // 函数参数，返回值都为number类型
+                return a + b;
+            }   // 调用时，形参和实参个数要相同，在参数后面加?，参数就变成可选参数b?: number，但必须在形参列表的最后面设置可选参数  
+        
+        函数表达式：
+            const func = function (a: number, b: number): number {
+
+            }
+    
+    任意类型：
+        const a: any = 123;     // a可以接收任意类型的值，any为动态类型，所以可以改变a的类型
+        不安全，但在兼容老代码时，难免会用到
+
+        ts文件中export {}是为了防止和其它文件的变量冲突
+
+    隐式类型推断：
+        在声明一个变量时，没有指定类型，ts会自动进行隐式类型推断，如果成功推断出类型，后面代码改变此变量类型就会报错，如果没有推断出类型，则此变量为any类型
+
+        建议给每个变量都加上类型
+
+    类型断言：
+        typescript无法明确变量的具体类型，但作为开发者是明确的
+        const arr = [1, 2, 3, 4];   // 假设这个数组来自一个明确的接口
+        const res = arr.find(i => i > 0);   // 找到数组中第一个大于0的数字
+        const square = res * res;   // 将结果平方后赋值给square
+        // 开发者知道res一定是一个数字，但ts会推断出res为number或undefined类型
+        // 所以我们要明确res的类型，就要用到类型断言
+
+        两种方式声明类型断言：
+            const num1 = res as number;
+            const num2 = <number>res;       // 此方式不能再tsx中使用，会被当成number标签
+
+        类型断言不是类型转换
+    
+    接口Interfaces：
+        是一种规范或契约，来约定对象的结构
+
+        定义一个接口，使用关键字interface：
+            interface Post {    // 每个属性可以用逗号或分号分隔，也可以不加
+                title: string
+                content: string
+            }
+
+            // 使用接口
+            function foo(post: Post) {      // 指定传参的类型
+                console.log(post.title);
+                console.log(post.content);
+            }
+        
+        接口可选成员，只读成员，动态成员：
+            可选成员：
+                interface Post {    // 每个属性可以用逗号或分号分隔，也可以不加
+                    title: string
+                    content: string
+                    subtitle?: string   // 表示subtitle是可选成员，可有可无
+                }
+
+            只读成员：
+                interface Post {    // 每个属性可以用逗号或分号分隔，也可以不加
+                    title: string
+                    content: string
+                    readonly summary: string    // 表示summary是只读的，不能修改
+                }
+
+            动态成员：一般用于缓存这种属性动态改变的对象
+                interface cache {
+                    [prop: string]: string      // 表示属性名是string类型，属性值是string类型
+                }
+    
+    类：描述一类具体事物的抽象特征
+        typescript增强了class的相关语法
+        在ts中使用类时，必须在类中先声明，然后再在constructor中使用：
+            class Person {
+                name: string
+                age: number
+
+                constructor(name: string, age: number) {
+                    this.name = name;
+                    this.age = age;
+                }
+            }
+
+        类当中成员的访问修饰符：
+            private：私有成员
+                class Person {
+                    name: string
+                    private age: number     // 表示age是私有属性，只能在类里面访问
+
+                    constructor(name: string, age: number) {
+                        this.name = name;
+                        this.age = age;
+                    }
+                }
+                // 如果根据Person类创建一个对象，此对象是不能访问age的
+            
+            public：公有成员
+                ts中类的属性默认就是共有的，所以加不加public修饰都一样
+            
+            protected：受保护的属性
+                如果父类某个属性设为protected，那么父类创建的对象访问不到此属性，但子类可以访问到
+        
+        类的只读属性：
+            readonly 如果属性设置了访问修饰符，那么只读属性设置在访问修饰符的后面
+        
+
+
+
+
+
+
+
+    
+    
