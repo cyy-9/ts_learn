@@ -33,4 +33,25 @@ ts文件在编译成js文件时，可以通过配置，选择编译成任意版�
             有一些默认值，例如node_modules等文件夹
             "exclude": ["./src/hello/**/*"]
             上述例子中，src下hello目录下的文件都不会编译
+        compilerOptions:
+            编译器选项
+            内部属性：
+                target：用来指定ts被编译后的js版本
+                    target: "ES5",
+                module：指定要使用的模块化规范
+                lib：用来指定项目中要使用的库
+                outDir：用来指定编译后的js文件所在的目录
+                outFile：将所有编译后的代码合并为一个文件
+                allowJs：是否对js文件进行编译，默认值false
+                checkJs：是否使用ts语法规则检查js代码的语法，默认值true
+                removeComments：编译后的文件是否移除注释
+                noEmit：不生成编译后的文件，默认false
+                noEmitOnError：当有错误时，不生成编译后的文件
+                alwaysStrict：设置编译后的代码是否是严格模式，默认false
+                noImplicitAny：不允许隐式的any类型
+                noImplicitAny：不允许不明确类型的this
+                strictNullCheck：严格的检查空值
+                strict：所有严格检查的总开关，如果为true，则所有严格检查都为true
+        注：
+            /**表示任意目录，/*表示任意文件
 
